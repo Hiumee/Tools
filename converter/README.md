@@ -1,12 +1,12 @@
-# Bytes convertor
+# Bytes converter
 
-[<img src="example.png" alt="Byte Convertor" style="height: 400px;">](https://tools.hiumee.com/convertor)
+[<img src="example.png" alt="Byte Converter" style="height: 400px;">](https://tools.hiumee.com/converter)
 
-This is a convertor to transform integers, floats, and strings to bytes and vice versa.
+This is a converter to transform integers, floats, and strings to bytes and vice versa.
 
 ## Usage
 
-You can use the website hosted on github pages [https://tools.hiumee.com/convertor](https://tools.hiumee.com/convertor).
+You can use the website hosted on github pages [https://tools.hiumee.com/converter](https://tools.hiumee.com/converter).
 
 ## Self-hosting
 

@@ -1,6 +1,6 @@
 {
-    "name": "x86 Assembler & Disassembler",
-    "short_name": "x86 Assembler & Disassembler",
+    "name": "Byte Converter",
+    "short_name": "Byte Converter",
     "start_url": ".",
     "theme_color": "#15d1b8",
     "background_color": "#ffffff",
