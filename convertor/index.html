@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byte Multi-Converter</title>
+    <meta name="description" content="Multi-format converter between hex, integers, floats, and strings.">
+    <meta name="keywords" content="hex, integers, floats, strings, converter, multi-format">
+    <meta name="author" content="Hiumee">
+    <meta property="og:title" content="Byte Multi-Converter">
+    <meta property="og:description" content="Multi-format converter between hex, integers, floats, and strings.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="./example.png">
+    <meta name="twitter:title" content="Byte Multi-Converter">
+    <meta name="twitter:description" content="Multi-format converter between hex, integers, floats, and strings.">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./index.js"></script>
+    <link rel="manifest" href="./manifest.json">
+    <style>
+        body {
+          font-family: monospace;
+        }
+    
+        input.error {
+          border-color: red;
+        }
+    
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+    
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+      </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-8 max-w-4xl w-full">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Byte Multi-format Converter</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="bytes" class="block text-gray-700 font-semibold mb-2">Bytes:</label>
+                <input id="bytes" type="text" placeholder="Enter hex..." class="w-full px-4 py-2 border rounded-lg">
+                <label for="bytes" id="bytes-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="string" class="block text-gray-700 font-semibold mb-2">String:</label>
+                <input id="string" type="text" placeholder="Enter string..." class="w-full px-4 py-2 border rounded-lg">
+                <label for="string" id="string-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+
+            <div>
+                <label for="int8" class="block text-gray-700 font-semibold mb-2">Int8:</label>
+                <input id="int8" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="int8" id="int8-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div> <!-- only for making the layout look better -->
+                <label for="uint8" class="block text-gray-700 font-semibold mb-2">Uint8:</label>
+                <input id="uint8" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="uint8" id="uint8-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+
+            <div>
+                <label for="int16LE" class="block text-gray-700 font-semibold mb-2">Int16 (LE):</label>
+                <input id="int16LE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="int16LE" id="int16LE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="uint16LE" class="block text-gray-700 font-semibold mb-2">Uint16 (LE):</label>
+                <input id="uint16LE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="uint16LE" id="uint16LE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            
+            <div>
+                <label for="int16BE" class="block text-gray-700 font-semibold mb-2">Int16 (BE):</label>
+                <input id="int16BE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="int16BE" id="int16BE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="uint16BE" class="block text-gray-700 font-semibold mb-2">Uint16 (BE):</label>
+                <input id="uint16BE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="uint16BE" id="uint16BE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+
+            <div>
+                <label for="int32LE" class="block text-gray-700 font-semibold mb-2">Int32 (LE):</label>
+                <input id="int32LE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="int32LE" id="int32LE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="uint32LE" class="block text-gray-700 font-semibold mb-2">Uint32 (LE):</label>
+                <input id="uint32LE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="uint32LE" id="uint32LE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            
+            <div>
+                <label for="int32BE" class="block text-gray-700 font-semibold mb-2">Int32 (BE):</label>
+                <input id="int32BE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="int32BE" id="int32BE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="uint32BE" class="block text-gray-700 font-semibold mb-2">Uint32 (BE):</label>
+                <input id="uint32BE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="uint32BE" id="uint32BE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+
+            <div>
+                <label for="int64LE" class="block text-gray-700 font-semibold mb-2">Int64 (LE):</label>
+                <input id="int64LE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="int64LE" id="int64LE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="uint64LE" class="block text-gray-700 font-semibold mb-2">Uint64 (LE):</label>
+                <input id="uint64LE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="uint64LE" id="uint64LE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+
+            <div>
+                <label for="int64BE" class="block text-gray-700 font-semibold mb-2">Int64 (BE):</label>
+                <input id="int64BE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="int64BE" id="int64BE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="uint64BE" class="block text-gray-700 font-semibold mb-2">Uint64 (BE):</label>
+                <input id="uint64BE" type="number" class="w-full px-4 py-2 border rounded-lg">
+                <label for="uint64BE" id="uint64BE-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+
+            <div>
+                <label for="float32" class="block text-gray-700 font-semibold mb-2">Float32:</label>
+                <input id="float32" type="number" step="any" class="w-full px-4 py-2 border rounded-lg">
+                <label for="float32" id="float32-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+            <div>
+                <label for="float64" class="block text-gray-700 font-semibold mb-2">Float64:</label>
+                <input id="float64" type="number" step="any" class="w-full px-4 py-2 border rounded-lg">
+                <label for="float64" id="float64-error" class="invisible text-orange-500 text-2xs">error</label>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // convertToBytes : string -> Uint8Array
+        // convertFromBytes : Uint8Array -> string
+        const inputs = {
+            bytes: {
+                field: document.getElementById("bytes"),
+                convertToBytes: (value) => {
+                    value = value.replace(/\s/g, "").toUpperCase();
+                    if (!/^[0-9A-F]*$/.test(value)) {
+                        return { error: "Invalid hex characters" };
+                    }
+
+                    const bytes = Uint8Array.from(value.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+                    return { value: bytes };
+                },
+                convertFromBytes: (bytes) => {
+                    const value = bytes.reduce((acc, byte) => acc + byte.toString(16).padStart(2, "0") + " ", "").trim();
+                    return { value: value };
+                }
+            },
+            string: {
+                field: document.getElementById("string"),
+                convertToBytes: (value) => {
+                    const bytes = new TextEncoder().encode(value);
+                    return { value: bytes };
+                },
+                convertFromBytes: (bytes) => {
+                    return { value: new TextDecoder().decode(bytes) };
+                }
+            },
+            int8: {
+                field: document.getElementById("int8"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < -128 || value > 127) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint8Array([value]);
+                    return { value: bytes, warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 1) {
+                        warning = "Invalid byte length. Using only the first byte";
+                    }
+                    if (bytes.length < 1) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(1 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 1);
+                    return { value: new Int8Array(bytes.buffer)[0], warning };
+                }
+            },
+            uint8: {
+                field: document.getElementById("uint8"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < 0 || value > 255) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint8Array([value]).reverse();
+                    return { value: bytes, warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 1) {
+                        warning = "Invalid byte length. Using only the first byte";
+                    }
+                    if (bytes.length < 1) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(1 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 1);
+                    return { value: new Uint8Array(bytes.buffer)[0], warning };
+                }
+            },
+            int16LE: {
+                field: document.getElementById("int16LE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < -32768 || value > 32767) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint16Array([value]);
+                    return { value: new Uint8Array(bytes.buffer), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 2) {
+                        warning = "Invalid byte length. Using only the first two bytes";
+                    }
+                    if (bytes.length < 2) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(2 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 2);
+                    return { value: new Int16Array(bytes.buffer)[0], warning };
+                }
+            },
+            uint16LE: {
+                field: document.getElementById("uint16LE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < 0 || value > 65535) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint16Array([value]);
+                    return { value: new Uint8Array(bytes.buffer), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 2) {
+                        warning = "Invalid byte length. Using only the first two bytes";
+                    }
+                    if (bytes.length < 2) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(2 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 2);
+                    return { value: new Uint16Array(bytes.buffer)[0], warning };
+                }
+            },
+            int16BE: {
+                field: document.getElementById("int16BE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < -32768 || value > 32767) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint16Array([value]);
+                    return { value: new Uint8Array(bytes.buffer).reverse(), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 2) {
+                        warning = "Invalid byte length. Using only the first two bytes";
+                    }
+                    if (bytes.length < 2) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(2 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 2);
+                    bytes = bytes.reverse();
+                    return { value: new Int16Array(bytes.buffer)[0], warning };
+                }
+            },
+            uint16BE: {
+                field: document.getElementById("uint16BE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < 0 || value > 65535) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint16Array([value]);
+                    return { value: new Uint8Array(bytes.buffer).reverse(), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 2) {
+                        warning = "Invalid byte length. Using only the first two bytes";
+                    }
+                    if (bytes.length < 2) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(2 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 2);
+                    bytes = bytes.reverse();
+                    return { value: new Uint16Array(bytes.buffer)[0], warning };
+                }
+            },
+            int32LE: {
+                field: document.getElementById("int32LE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < -2147483648 || value > 2147483647) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint32Array([value]);
+                    return { value: new Uint8Array(bytes.buffer), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 4) {
+                        warning = "Invalid byte length. Using only the first four bytes";
+                    }
+                    if (bytes.length < 4) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(4 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 4);
+                    return { value: new Int32Array(bytes.buffer)[0], warning };
+                }
+            },
+            uint32LE: {
+                field: document.getElementById("uint32LE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < 0 || value > 4294967295) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint32Array([value]);
+                    return { value: new Uint8Array(bytes.buffer), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 4) {
+                        warning = "Invalid byte length. Using only the first four bytes";
+                    }
+                    if (bytes.length < 4) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(4 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 4);
+                    return { value: new Uint32Array(bytes.buffer)[0], warning };
+                }
+            },
+            int32BE: {
+                field: document.getElementById("int32BE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < -2147483648 || value > 2147483647) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint32Array([value]);
+                    return { value: new Uint8Array(bytes.buffer).reverse(), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 4) {
+                        warning = "Invalid byte length. Using only the first four bytes";
+                    }
+                    if (bytes.length < 4) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(4 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 4);
+                    bytes = bytes.reverse();
+                    return { value: new Int32Array(bytes.buffer)[0], warning };
+                }
+            },
+            uint32BE: {
+                field: document.getElementById("uint32BE"),
+                convertToBytes: (value) => {
+                    value = parseInt(value);
+                    let warning = null;
+                    if (value < 0 || value > 4294967295) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new Uint32Array([value]);
+                    return { value: new Uint8Array(bytes.buffer).reverse(), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 4) {
+                        warning = "Invalid byte length. Using only the first four bytes";
+                    }
+                    if (bytes.length < 4) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(4 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 4);
+                    bytes = bytes.reverse();
+                    return { value: new Uint32Array(bytes.buffer)[0], warning };
+                }
+            },
+            int64LE: {
+                field: document.getElementById("int64LE"),
+                convertToBytes: (value) => {
+                    value = BigInt(value);
+                    let warning = null;
+                    if (value < -9223372036854775808n || value > 9223372036854775807n) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new BigInt64Array([value]);
+                    return { value: new Uint8Array(bytes.buffer), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 8) {
+                        warning = "Invalid byte length. Using only the first eight bytes";
+                    }
+                    if (bytes.length < 8) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(8 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 8);
+                    return { value: new BigInt64Array(bytes.buffer)[0], warning };
+                }
+            },
+            uint64LE: {
+                field: document.getElementById("uint64LE"),
+                convertToBytes: (value) => {
+                    value = BigInt(value);
+                    let warning = null;
+                    if (value < 0 || value > 18446744073709551615n) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new BigUint64Array([value]);
+                    return { value: new Uint8Array(bytes.buffer), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 8) {
+                        warning = "Invalid byte length. Using only the first eight bytes";
+                    }
+                    if (bytes.length < 8) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(8 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 8);
+                    return { value: new BigUint64Array(bytes.buffer)[0], warning };
+                }
+            },
+            int64BE: {
+                field: document.getElementById("int64BE"),
+                convertToBytes: (value) => {
+                    value = BigInt(value);
+                    let warning = null;
+                    if (value < -9223372036854775808n || value > 9223372036854775807n) {
+                        warning = "Value out of range. Using only the first eight bytes";
+                    }
+                    const bytes = new BigInt64Array([value]);
+                    return { value: new Uint8Array(bytes.buffer).reverse(), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 8) {
+                        warning = "Invalid byte length";
+                    }
+                    if (bytes.length < 8) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(8 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 8);
+                    bytes = bytes.reverse();
+                    return { value: new BigInt64Array(bytes.buffer)[0], warning };
+                }
+            },
+            uint64BE: {
+                field: document.getElementById("uint64BE"),
+                convertToBytes: (value) => {
+                    value = BigInt(value);
+                    let warning = null;
+                    if (value < 0 || value > 18446744073709551615n) {
+                        warning = "Value out of range";
+                    }
+                    const bytes = new BigUint64Array([value]);
+                    return { value: new Uint8Array(bytes.buffer).reverse(), warning };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 8) {
+                        warning = "Invalid byte length. Using only the first eight bytes";
+                    }
+                    if (bytes.length < 8) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(8 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 8);
+                    bytes = bytes.reverse();
+                    return { value: new BigUint64Array(bytes.buffer)[0], warning };
+                }
+            },
+            float32: {
+                field: document.getElementById("float32"),
+                convertToBytes: (value) => {
+                    value = parseFloat(value);
+                    const bytes = new Float32Array([value]);
+                    return { value: new Uint8Array(bytes.buffer) };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 4) {
+                        warning = "Invalid byte length. Using only the first four bytes";
+                    }
+                    if (bytes.length < 4) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(4 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 4);
+                    return { value: new Float32Array(bytes.buffer)[0], warning };
+                }
+            },
+            float64: {
+                field: document.getElementById("float64"),
+                convertToBytes: (value) => {
+                    value = parseFloat(value);
+                    const bytes = new Float64Array([value]);
+                    return { value: new Uint8Array(bytes.buffer) };
+                },
+                convertFromBytes: (bytes) => {
+                    let warning = null;
+                    if (bytes.length > 8) {
+                        warning = "Invalid byte length. Using only the first eight bytes";
+                    }
+                    if (bytes.length < 8) {
+                        warning = "Invalid byte length. Padding with zeros";
+                        bytes = Uint8Array.from([...bytes,...new Uint8Array(8 - bytes.length).fill(0)]);
+                    }
+                    bytes = bytes.slice(0, 8);
+                    return { value: new Float64Array(bytes.buffer)[0], warning };
+                }
+            }
+        };
+
+        function syncFields(excludeId) {
+            const newBytes = inputs[excludeId].convertToBytes(inputs[excludeId].field.value);
+
+            if (newBytes.error) {
+                inputs[excludeId].field.classList.add("error");
+                document.getElementById(`${excludeId}-error`).innerText = newBytes.error;
+                document.getElementById(`${excludeId}-error`).classList.remove("invisible");
+                return;
+            } else if (newBytes.warning) {
+                inputs[excludeId].field.classList.add("error");
+                document.getElementById(`${excludeId}-error`).innerText = newBytes.warning;
+                document.getElementById(`${excludeId}-error`).classList.remove("invisible");
+                return;
+            } else {
+                inputs[excludeId].field.classList.remove("error");
+                document.getElementById(`${excludeId}-error`).classList.add("invisible");
+            }
+
+            for (const [id, value] of Object.entries(inputs)) {
+                if (id === excludeId) continue;
+
+                const output = value.convertFromBytes(newBytes.value);
+
+                if (output.warning) {
+                    value.field.classList.add("error");
+                    document.getElementById(`${id}-error`).innerText = output.warning;
+                    document.getElementById(`${id}-error`).classList.remove("invisible");
+                } else {
+                    value.field.classList.remove("error");
+                    document.getElementById(`${id}-error`).classList.add("invisible");
+                }
+
+                value.field.value = output.value ?? "";
+            }
+        }
+
+        document.querySelectorAll("input").forEach(input => {
+            input.addEventListener("input", (event) => {
+                const id = event.target.id;
+                syncFields(id);
+            });
+        });
+    </script>
+
+</body>
+
+</html>

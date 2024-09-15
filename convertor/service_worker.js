@@ -3,7 +3,7 @@
 self.addEventListener("install",e=>{
     e.waitUntil(
       caches.open("static").then(cache=>{
-        return cache.addAll([".","./converters.js","./favicon.ico","./favicon16.png","./favicon32.png","./favicon180.png","./favicon192.png","./favicon512.png","./highlight.asm.js","./highlight.css","./highlight.js","./iced_x86_bg.wasm","./iced_x86.js","./index.js","./nasm.js","./nasm.wasm","./style.css"]);
+        return cache.addAll([".","./favicon.ico","./favicon16.png","./favicon32.png","./favicon180.png","./favicon192.png","./favicon512.png","./index.js","./style.css"]);
       })
     );
   });

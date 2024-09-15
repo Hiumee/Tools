@@ -15,8 +15,6 @@ You can use the website hosted on github pages [https://tools.hiumee.com/assembl
 Clone the repository and start a web server in the root directory. For example, using python:
 
 ```bash
-git clone https://github.com/Hiumee/Web-x86-Assembler-Disassembler
-cd Web-x86-Assembler-Disassembler
 python3 -m http.server
 ```
 
