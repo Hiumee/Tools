@@ -2,7 +2,7 @@
 
 [<img src="example.png" alt="Web Assembler" style="height: 400px;">](https://tools.hiumee.com/assembler)
 
-This is a client-side asm assebler for x86 and x86-64 architectures with a simple web interface.
+This is a client-side asm assembler for x86 and x86-64 architectures with a simple web interface.
 
 # Usage
 
