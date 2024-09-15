@@ -1,0 +1,35 @@
+{
+    "name": "x86 Assembler & Disassembler",
+    "short_name": "x86 Assembler & Disassembler",
+    "start_url": ".",
+    "theme_color": "#15d1b8",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "favicon192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon180.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        }
+    ]
+}

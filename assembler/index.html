@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assembler & Disassembler</title>
+  <meta name="description"
+    content="A client-side application to assemble x86 assembly code for 32 and 64 bit, and disassemble from hex representation using icedx86 and nasm.">
+  <meta name="keywords"
+    content="x86, assembly, assembler, disassembler, hex, iced, nasm, client-side, 32-bit, 64-bit, hex to assembly, assembly to hex">
+  <meta name="author" content="Hiumee">
+  <meta property="og:title" content="Online x86 Assembler & Disassembler">
+  <meta property="og:description"
+    content="A client-side application to assemble x86 assembly code for 32 and 64 bit, and disassemble from hex representation using icedx86 and nasm.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Online x86 Assembler & Disassembler">
+  <meta name="twitter:description"
+    content="A client-side application to assemble x86 assembly code for 32 and 64 bit, and disassemble from hex representation using icedx86 and nasm.">
+  <link rel="icon" type="image/ico" href="./favicon.ico">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./highlight.css">
+  <script src="./index.js"></script>
+  <script src="./highlight.js"></script>
+  <script src="./highlight.asm.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <script type="text/javascript" src="./nasm.js"></script>
+  <script type="module" src="./converters.js"></script>
+  <script type="module">
+    import { disassemble, assemble } from "./converters.js";
+    window.disassemble = disassemble;
+    window.assemble = assemble;
+  </script>
+  <style>
+    body,
+    textarea,
+    button,
+    div {
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-lg rounded-lg p-8 max-w-6xl w-full">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Assembler & Disassembler</h1>
+
+    <!-- Main container for input and output -->
+    <div class="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
+
+      <!-- Input Section -->
+      <div class="lg:w-1/4">
+        <label for="input" class="block text-gray-700 font-semibold mb-2">Enter Assembly Code or Hex String:</label>
+        <textarea id="input" rows="6" placeholder="Enter assembly code or hex string..."
+          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+
+        <!-- Architecture Selection -->
+        <div class="mb-4">
+          <span class="block text-gray-700 font-semibold mb-2">Choose Architecture:</span>
+          <label class="inline-flex items-center">
+            <input type="radio" name="architecture" value="x86" class="text-blue-600 focus:ring-blue-500" checked>
+            <span class="ml-2 text-gray-700">x86</span>
+          </label>
+          <label class="inline-flex items-center ml-4">
+            <input type="radio" name="architecture" value="x64" class="text-blue-600 focus:ring-blue-500">
+            <span class="ml-2 text-gray-700">x64</span>
+          </label>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-4">
+          <button onclick="processInput('assemble')"
+            class="bg-green-600 text-white py-2 px-4 rounded-lg w-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+            Assemble
+          </button>
+          <button onclick="processInput('disassemble')"
+            class="bg-blue-600 text-white py-2 px-4 rounded-lg w-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Disassemble
+          </button>
+        </div>
+      </div>
+
+      <!-- Decompiled Assembly Section -->
+      <div id="decompiledOutput" class="lg:w-1/2 bg-gray-50 p-4 border border-gray-200 rounded-lg text-gray-800">
+        <button id="copyAssemblyBtn" class="bg-blue-500 text-white text-xs px-2 py-1 rounded"
+          onclick="copyToClipboard('')">Copy</button>
+        <strong>Decompiled Assembly Code:</strong>
+        <div id="decompiledAssemblyCode" class="mt-2 whitespace-pre-wrap"></div>
+      </div>
+
+      <!-- Hex and Other Outputs Section -->
+      <div id="output"
+        class="lg:w-1/4 bg-gray-50 p-4 border border-gray-200 rounded-lg text-gray-800 overflow-x-hidden space-y-4">
+      </div>
+
+    </div>
+
+    <!-- Error Section -->
+    <div id="error" class="text-red-600 mt-4"></div>
+
+  </div>
+
+  <script>
+    function processInput(action) {
+      const inputText = document.getElementById("input").value.trim();
+      const architecture = document.querySelector('input[name="architecture"]:checked').value;
+      const outputDiv = document.getElementById("output");
+      const decompiledOutputDiv = document.getElementById("decompiledAssemblyCode");
+      const errorDiv = document.getElementById("error");
+      const copyAssemblyBtn = document.getElementById("copyAssemblyBtn");
+
+      outputDiv.innerHTML = ''; // Clear previous output
+      decompiledOutputDiv.innerHTML = '';  // Clear previous decompiled output
+      errorDiv.innerHTML = '';  // Clear previous errors
+
+      if (!inputText) {
+        errorDiv.innerHTML = 'Please enter valid input.';
+        return;
+      }
+
+      let hexString = "";
+      let assemblyCode = "";
+
+      if (action === 'assemble') {
+        try {
+          hexString = assemble(architecture, inputText);
+          assemblyCode = disassemble(architecture, hexString);
+          hexString = boldZeroBytes(hexString.toUpperCase());
+        } catch (err) {
+          errorDiv.innerHTML = 'Error processing assembly code.\n' + err;
+          return;
+        }
+      } else if (action === 'disassemble') {
+        try {
+          const preprocessedHex = preprocessHexInput(inputText);
+          hexString = boldZeroBytes(preprocessedHex.toUpperCase());
+          assemblyCode = disassemble(architecture, preprocessedHex);
+        } catch (err) {
+          errorDiv.innerHTML = 'Error processing hex string.' + err;
+          return;
+        }
+      }
+
+      decompiledOutputDiv.innerHTML = assemblyCode;
+      copyAssemblyBtn.setAttribute("onclick", `copyToClipboard("${assemblyCode.replace(/\n/g, '\\n')}")`);
+
+      const pythonString = hexToPythonString(hexString);
+      const arrayLiteral = hexToArrayLiteral(hexString);
+
+      outputDiv.innerHTML = `
+        <div>
+          <button onclick="copyToClipboard('${hexString.replace(/<\/?strong>/g, '')}')"
+            class="bg-blue-500 text-white text-xs px-2 py-1 rounded">Copy</button>
+          <strong>Hex:</strong>
+          <div class="mt-2">${hexString}</div>
+        </div>
+        <div>
+          <button onclick='copyToClipboard("${pythonString.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}")'
+            class="bg-blue-500 text-white text-xs px-2 py-1 rounded">Copy</button>
+          <strong>Python String:</strong>
+          <div class="mt-2">${pythonString}</div>
+        </div>
+        <div>
+          <button onclick="copyToClipboard('${arrayLiteral}')"
+            class="bg-blue-500 text-white text-xs px-2 py-1 rounded">Copy</button>
+          <strong>Array Literal:</strong>
+          <div class="mt-2">${arrayLiteral}</div>
+        </div>
+      `;
+    }
+
+    function preprocessHexInput(hexString) {
+      let hs = hexString
+        .replace(/0x/g, '')
+        .replace(/0x/g, ' ')
+        .replace(/[^a-fA-F0-9]/g, '');
+      return hs.match(/.{1,2}/g).join(' ');
+    }
+
+    function boldZeroBytes(hexString) {
+      return hexString.split(' ').map(byte => byte === '00' ? `<strong>${byte}</strong>` : byte).join(' ');
+    }
+
+    function hexToPythonString(hexString) {
+      return `"\\x${hexString.replace(/<\/?strong>/g, '').split(' ').join('\\x')}"`;
+    }
+
+    function hexToArrayLiteral(hexString) {
+      return `{ ${hexString.replace(/<\/?strong>/g, '').split(' ').map(byte => `0x${byte}`).join(', ')} }`;
+    }
+
+    function copyToClipboard(text) {
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = text;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempTextArea);
+    }
+  </script>
+
+</body>
+
+</html>
